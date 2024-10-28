@@ -1,14 +1,14 @@
 import mimetypes
+import re
 from pathlib import Path
 from urllib.parse import urlparse
+
+import cv2
+import numpy as np
 import pygsheets
 import requests
-import re
-import numpy as np
 from pdf2image import convert_from_path
-import cv2
 from pyzbar.pyzbar import decode
-
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -30,9 +30,7 @@ PATTERN_LIST = [FEDEX1, FEDEX2, USPS_22, USPS_26]
 
 def detect_link_and_transform(url: str):
     download_link = ""
-    ggdrive_link_pattern = (
-        r"(https?://drive\.google\.com/(?:file/d/|open\?id=)([a-zA-Z0-9_-]+))"
-    )
+    ggdrive_link_pattern = r"(https?://drive\.google\.com/(?:file/d/|open\?id=)([a-zA-Z0-9_-]+))"
     matches = re.findall(ggdrive_link_pattern, url)
     if not matches:
         return url
@@ -89,12 +87,8 @@ def ocr_pdf_and_match(filepath: str):
 
 def main():
     worksheet = get_worksheet_from_ggsheet(SHEET_ID, str(JSON_PATH))
-    worksheet_data = worksheet.get_all_values(
-        returnas="matrix",
-        majdim="rows",
-        include_tailing_empty=False,
-        include_tailing_empty_rows=False,
-    )
+    worksheet_data = worksheet.get_all_values(returnas="matrix", majdim="rows", include_tailing_empty=False,
+                                              include_tailing_empty_rows=False, )
     for i, data_sheet in enumerate(worksheet_data, start=1):
         if data_sheet:
             url = detect_link_and_transform(data_sheet[3])
@@ -102,29 +96,19 @@ def main():
                 if url:
                     with requests.get(url, stream=True) as response:
                         response.raise_for_status()
-                        filename = get_filename_from_headers(
-                            response
-                        ) or get_filename_from_url(url)
+                        filename = get_filename_from_headers(response) or get_filename_from_url(url)
                         filepath = f"{IMAGE_PATH}/{filename}"
                         with open(filepath, "wb") as f:
                             for chunk in response.iter_content(chunk_size=8192):
                                 f.write(chunk)
                     data = ocr_pdf_and_match(filepath)
-                    value = (
-                        str(data)
-                        .replace(" ", "")
-                        .replace("TRK#", "")
-                        .replace("ID#", "")
-                    )
+                    value = (str(data).replace(" ", "").replace("TRK#", "").replace("ID#", ""))
                     worksheet.update_value(f"E{i}", value, parse=True)
                 else:
                     value = "Lỗi link label"
                     worksheet.update_value(f"E{i}", value, parse=True)
                     # Update the cell's background color
-                    worksheet.apply_format(
-                        f"E{i}:E{i}",
-                        {"backgroundColor": {"red": 1, "green": 0, "blue": 0}},
-                    )
+                    worksheet.apply_format(f"E{i}:E{i}", {"backgroundColor": {"red": 1, "green": 0, "blue": 0}}, )
                     continue
             except Exception as e:
                 print("Skipping empty link", e)
