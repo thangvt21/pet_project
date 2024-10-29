@@ -93,6 +93,7 @@ def main():
             url = detect_link_and_transform(data_sheet[3])
             try:
                 if url:
+                    # Download PDF, Images from url that get from Google Sheet:
                     with requests.get(url, stream=True) as response:
                         response.raise_for_status()
                         filename = get_filename_from_headers(
@@ -102,6 +103,7 @@ def main():
                         with open(filepath, "wb") as f:
                             for chunk in response.iter_content(chunk_size=8192):
                                 f.write(chunk)
+                    # Detech and extract data from barcode
                     data = detect_barcode(filepath)
                     value = (
                         str(data)
