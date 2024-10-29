@@ -9,6 +9,7 @@ import pygsheets
 import requests
 from pdf2image import convert_from_path
 from pyzbar.pyzbar import decode
+from pyzbar.wrapper import ZBarSymbol
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -26,7 +27,8 @@ def detect_link_and_transform(url: str):
     if not matches:
         return url
     else:
-        for _, file_id in matches:
+        for _, url in matches:
+            file_id = url.split("id=")[-1]
             download_link = f"https://drive.google.com/uc?export=download&id={file_id}"
         return download_link
 
@@ -63,7 +65,7 @@ def get_worksheet_from_ggsheet(sheet_id: str, file_json: str):
     return worksheet
 
 
-def detect_barcode(filepath: str):
+def detect_usps_barcode(filepath: str):
     gray = ""
     if filepath.endswith(".pdf"):
         images = convert_from_path(filepath)
@@ -73,11 +75,29 @@ def detect_barcode(filepath: str):
     else:
         images = cv2.imread(filepath)
         gray = cv2.cvtColor(images, cv2.COLOR_BGR2GRAY)
-    barcode = decode(gray)
+    barcode = decode(gray, symbols=[ZBarSymbol.CODE128])
     data_barcode = barcode[0].data
-    result = re.search(r"(?<=\x1d)\d+", data_barcode.decode())
+    usps = re.search(r"(?<=\x1d)\d+", data_barcode.decode())
+    return usps.group()
 
-    return result.group()
+
+def detect_fedex_barcode(filepath: str):
+    gray = ""
+    if filepath.endswith(".pdf"):
+        images = convert_from_path(filepath)
+        images = [np.array(i)[:, :, ::-1] for i in images]
+        for nr, image in enumerate(images):
+            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    else:
+        images = cv2.imread(filepath)
+        gray = cv2.cvtColor(images, cv2.COLOR_BGR2GRAY)
+    barcode = decode(gray, symbols=[ZBarSymbol.CODE128])
+    try:
+        fedex = re.search(r"(\d{12})$", barcode[1].data.decode())
+        return fedex.group()
+    except:
+        fedex = re.search(r"(\d{12})$", barcode[0].data.decode())
+        return fedex.group()
 
 
 def main():
@@ -104,13 +124,11 @@ def main():
                             for chunk in response.iter_content(chunk_size=8192):
                                 f.write(chunk)
                     # Detech and extract data from barcode
-                    data = detect_barcode(filepath)
-                    value = (
-                        str(data)
-                        .replace(" ", "")
-                        .replace("TRK#", "")
-                        .replace("ID#", "")
-                    )
+                    # Label USPS => use this
+                    data = detect_usps_barcode(filepath)
+                    # Label FEDEX => use this
+                    # data = detect_fedex_barcode(filepath)
+                    value = str(data).replace(" ", "")
                     worksheet.update_value(f"E{i}", value, parse=True)
                 else:
                     value = "Lỗi link label"
