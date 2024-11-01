@@ -14,7 +14,7 @@ from pyzbar.wrapper import ZBarSymbol
 BASE_DIR = Path(__file__).resolve().parent
 
 SHEET_ID = "1lX8xs3zJVinhRs_r4itv6V8gAw4Aut8rY_waj3LHql4"
-JSON_PATH = BASE_DIR.parent / "luminous-lodge-321503-2defcccdcd2d.json"
+JSON_PATH = BASE_DIR.parent / "luminous-lodge-321503-c17157d58b87.json"
 IMAGE_PATH = BASE_DIR.parent / "img"
 
 
@@ -100,8 +100,21 @@ def detect_fedex_barcode(filepath: str):
         return fedex.group()
 
 
+def download_images(url: str):
+    if url:
+        # Download PDF, Images from url that get from Google Sheet:
+        with requests.get(url, stream=True) as response:
+            response.raise_for_status()
+            filename = get_filename_from_headers(response) or get_filename_from_url(url)
+            filepath = f"{IMAGE_PATH}/{filename}"
+            with open(filepath, "wb") as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    f.write(chunk)
+        return filepath
+
+
 def main():
-    worksheet = get_worksheet_from_ggsheet(SHEET_ID, str(JSON_PATH))
+    worksheet = get_worksheet_from_ggsheet(SHEET_ID, JSON_PATH)
     worksheet_data = worksheet.get_all_values(
         returnas="matrix",
         majdim="rows",
@@ -114,15 +127,16 @@ def main():
             try:
                 if url:
                     # Download PDF, Images from url that get from Google Sheet:
-                    with requests.get(url, stream=True) as response:
-                        response.raise_for_status()
-                        filename = get_filename_from_headers(
-                            response
-                        ) or get_filename_from_url(url)
-                        filepath = f"{IMAGE_PATH}/{filename}"
-                        with open(filepath, "wb") as f:
-                            for chunk in response.iter_content(chunk_size=8192):
-                                f.write(chunk)
+                    # with requests.get(url, stream=True) as response:
+                    #     response.raise_for_status()
+                    #     filename = get_filename_from_headers(
+                    #         response
+                    #     ) or get_filename_from_url(url)
+                    #     filepath = f"{IMAGE_PATH}/{filename}"
+                    #     with open(filepath, "wb") as f:
+                    #         for chunk in response.iter_content(chunk_size=8192):
+                    #             f.write(chunk)
+                    filepath = download_images(url)
                     # Detech and extract data from barcode
                     # Label USPS => use this
                     data = detect_usps_barcode(filepath)
@@ -141,13 +155,6 @@ def main():
                     continue
             except Exception as e:
                 print("Skipping empty link", e)
-                value = "Lỗi link label"
-                worksheet.update_value(f"E{i}", value, parse=True)
-                # Update the cell's background color
-                worksheet.apply_format(
-                    f"E{i}:E{i}",
-                    {"backgroundColor": {"red": 1, "green": 0, "blue": 0}},
-                )
 
 
 main()
