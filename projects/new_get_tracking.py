@@ -14,7 +14,7 @@ from pyzbar.wrapper import ZBarSymbol
 BASE_DIR = Path(__file__).resolve().parent
 
 SHEET_ID = "1lX8xs3zJVinhRs_r4itv6V8gAw4Aut8rY_waj3LHql4"
-JSON_PATH = BASE_DIR.parent / "luminous-lodge-321503-2defcccdcd2d.json"
+JSON_PATH = BASE_DIR.parent / "luminous-lodge-321503-c17157d58b87.json"
 IMAGE_PATH = BASE_DIR.parent / "img"
 
 
@@ -114,7 +114,7 @@ def download_images(url: str):
 
 
 def main():
-    worksheet = get_worksheet_from_ggsheet(SHEET_ID, str(JSON_PATH))
+    worksheet = get_worksheet_from_ggsheet(SHEET_ID, JSON_PATH)
     worksheet_data = worksheet.get_all_values(
         returnas="matrix",
         majdim="rows",
