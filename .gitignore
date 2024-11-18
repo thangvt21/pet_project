@@ -4,3 +4,7 @@
 /outPut
 /img
 /jpeg
+/test
+/.vscode
+/.pytest_cache
+/.idea
