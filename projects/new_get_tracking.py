@@ -1,6 +1,7 @@
 import mimetypes
 import re
 from pathlib import Path
+from types import NoneType
 from urllib.parse import urlparse
 
 import cv2
@@ -139,9 +140,11 @@ def main():
                     filepath = download_images(url)
                     # Detech and extract data from barcode
                     # Label USPS => use this
-                    data = detect_usps_barcode(filepath)
+                    try:
+                        data = detect_usps_barcode(filepath)
                     # Label FEDEX => use this
-                    # data = detect_fedex_barcode(filepath)
+                    except Ex:
+                        data = detect_fedex_barcode(filepath)
                     value = str(data).replace(" ", "")
                     worksheet.update_value(f"E{i}", value, parse=True)
                 else:
