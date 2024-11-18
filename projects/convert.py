@@ -2,8 +2,8 @@ import os
 from PIL import Image
 
 # Define the input folder containing PNG files and the output folder for JPEGs
-input_folder = r"D:\work\pet_project\img"
-output_folder = r"D:\work\pet_project\jpeg"
+input_folder = r"D:\work\pet_project\newWeb\Catalog (ảnh sản phẩm)\Tote bag"
+output_folder = r"D:\work\pet_project\outPut\Catalog (ảnh sản phẩm)\Tote bag"
 
 # Create the output folder if it doesn't exist
 os.makedirs(output_folder, exist_ok=True)
