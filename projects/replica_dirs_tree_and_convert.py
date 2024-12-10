@@ -30,8 +30,8 @@ def convert_and_resize_images(input_folder, output_folder, max_width, max_height
 
 
 # Example usage
-input_folder = r"D:\work\pet_project\newWeb"
-output_folder = r"D:\work\pet_project\outPut"
+input_folder = r"D:\work\pet_project\img"
+output_folder = r"D:\work\pet_project\jpeg"
 
 
 if __name__ == "__main__":

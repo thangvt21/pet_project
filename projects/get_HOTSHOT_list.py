@@ -2,8 +2,8 @@ import os
 import pygsheets
 import pandas as pd
 
-root = "D:\\FlashPOD Dropbox\\FlashPOD\\MACHINE 32\\2024_11\\2024_11_10\\"
-excel_file_name = "07_1110_P32_SINGLE_SHIRT"
+root = r"D:\FlashPOD Dropbox\FlashPOD\REPRINT\2024_11\2024_11_16\21_REPRINT_1116_DUA CHO MOCKUP"
+excel_file_name = "21_REPRINT_1116_DUA CHO MOCKUP"
 folder_path = "D:\\work\\pet_project\\img\\"
 
 machine_list = [

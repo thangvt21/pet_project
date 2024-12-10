@@ -1,6 +1,0 @@
-pygsheets
-requests
-numpy
-pdf2image
-pyzbar
-opencv-python

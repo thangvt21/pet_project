@@ -1,7 +1,6 @@
 import mimetypes
 import re
 from pathlib import Path
-from types import NoneType
 from urllib.parse import urlparse
 
 import cv2
@@ -96,7 +95,7 @@ def detect_fedex_barcode(filepath: str):
     try:
         fedex = re.search(r"(\d{12})$", barcode[1].data.decode())
         return fedex.group()
-    except:
+    except:  # noqa: E722
         fedex = re.search(r"(\d{12})$", barcode[0].data.decode())
         return fedex.group()
 
@@ -143,7 +142,7 @@ def main():
                     try:
                         data = detect_usps_barcode(filepath)
                     # Label FEDEX => use this
-                    except Ex:
+                    except Exception:  # noqa: F821
                         data = detect_fedex_barcode(filepath)
                     value = str(data).replace(" ", "")
                     worksheet.update_value(f"E{i}", value, parse=True)
