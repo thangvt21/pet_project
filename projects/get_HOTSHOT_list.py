@@ -2,9 +2,9 @@ import os
 import pygsheets
 import pandas as pd
 
-root = "D:\\FlashPOD Dropbox\\FlashPOD\\HOTSHOT\\2024_9\\"
-excel_file_name = "HOTSHOT_092024"
-folder_path = "E:\\THANGVT\\vtt_tools\\arrange-PDF-files\\img\\"
+root = r"D:\FlashPOD Dropbox\FlashPOD\REPRINT\2024_11\2024_11_16\21_REPRINT_1116_DUA CHO MOCKUP"
+excel_file_name = "21_REPRINT_1116_DUA CHO MOCKUP"
+folder_path = "D:\\work\\pet_project\\img\\"
 
 machine_list = [
     1,
@@ -33,6 +33,13 @@ machine_list = [
     29,
     30,
     31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
 ]
 
 
@@ -110,23 +117,23 @@ def create_order_set(file):
 
 def get_file_name(order):
     variant = (
-        order.date
-        + "_"
-        + order.order_code
-        + "_"
-        + order.seller
-        + "_"
-        + order.product_type
-        + "_"
-        + order.color
-        + "_"
-        + order.size
-        + "_"
-        + order.set_number
-        + "_"
-        + order.set
-        + "_"
-        + order.side1
+        # order.date
+        # + "_"
+        order.order_code
+        # + "_"
+        # + order.seller
+        # + "_"
+        # + order.product_type
+        # + "_"
+        # + order.color
+        # + "_"
+        # + order.size
+        # + "_"
+        # + order.set_number
+        # + "_"
+        # + order.set
+        # + "_"
+        # + order.side1
     )
     return variant
 
@@ -166,7 +173,7 @@ def main():
     df2 = pd.DataFrame(order_single)
 
     sheets = {"Sheet1": df1, "Sheet2": df2}
-
+    # print(sheets)
     with pd.ExcelWriter(
         folder_path + excel_file_name + ".xlsx",
         engine="openpyxl",

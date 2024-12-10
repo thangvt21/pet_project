@@ -1,30 +1,75 @@
-import re
-from codecs import ignore_errors
 from pathlib import Path
-
-import cv2
-from pyzbar.pyzbar import decode, ZBarSymbol
-
-BASEDIR = Path(__file__).resolve().parent
-images = cv2.imread(r"D:\work\pet_project\img\AJNZOCS3W_3181355_shipment_label.png")
-gray_img = cv2.cvtColor(images, cv2.COLOR_BGR2GRAY)
-# images = convert_from_path(
-#     BASEDIR.parent / "img" / "1729653851-dp-4742b6ae131ccda5e603c0c6b2778e80.pdf"
-# )
-
-# images = [np.array(i)[:, :, ::-1] for i in images]
-# images = [np.array(i)[:, :, ::-1] for i in img]
-# for nr, image in enumerate(images):
-#     gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-barcode = decode(gray_img,symbols=[ZBarSymbol.CODE128])
-result = re.search(r'(\d{12})$', barcode[0].data.decode())
-print(result.group())
+from flask import Flask
+from PIL import Image
+from pdf2image import convert_from_path
+import pytesseract as tess
+import os
+import re
 
 
-# print(barcode)
-# data_barcode = barcode[0].data
-# result = re.search(r"(?<=\x1d)\d+", data_barcode.decode())
-# print(result.group())
-# cv2.imshow("aa", gray_img)
-# cv2.waitKey(0)
+app = Flask(__name__)
+
+BASE_DIR = Path(__file__).resolve().parent
+PATH_IMAGE = r"D:\work\pet_project\jpeg"
+tess.pytesseract.tesseract_cmd = str(BASE_DIR / "Tesseract-OCR" / "tesseract.exe")
+
+pattern1 = r"TRK# (\d{4} \d{4} \d{4})"
+pattern2 = r"ID# (\d{4} \d{4} \d{4})"
+TRACKING_22 = r"\d{4} \d{4} \d{4} \d{4} \d{4} \d{2}"
+TRACKING_26 = r"\d{4} \d{4} \d{4} \d{4} \d{4} \d{4} \d{2}"
+
+pattern_fedex = [pattern1, pattern2]
+pattern_usps = [TRACKING_22, TRACKING_26]
+provider = ["Pitney Bowes", "FedEx", "UPS"]
+pattern_ups = r"1Z [A-Z0-9]{3} [A-Z0-9]{3} [A-Z0-9]{2} [A-Z0-9]{4} [A-Z0-9]{4}"
+
+
+def check_label():
+    res = {}
+    for _, _, files in os.walk(PATH_IMAGE):
+        for file in files:
+            file_path = os.path.join(PATH_IMAGE, file)
+            if not os.path.exists(file_path):
+                raise FileNotFoundError(f"No such file or directory: '{file_path}'")
+            if file.endswith(".pdf"):
+                images = convert_from_path(file_path)
+                text = ""
+                for image in images:
+                    text += tess.image_to_string(image) + "\n"
+            else:
+                text += tess.image_to_string(Image.open(file_path)) + "\n"
+            print(text)
+
+            # for p in provider:
+            #     match2 = re.search(p, text)
+
+            #     if match2:
+            #         match = re.search(pattern_ups, text)
+            #         print(p)
+            #         if match:
+            #             print(match.group())
+
+            # label = ""
+            # tracking = ""
+            # for pr in provider:
+            #     if re.search(pr, text):
+            #         label = pr
+            #         if label == "FedEx":
+            #             for pa in pattern_fedex:
+            #                 match = re.search(pa, text)
+            #                 if match:
+            #                     tracking = match.group(1)
+            #         else:
+            #             for pa in pattern_usps:
+            #                 match = re.search(pa, text)
+            #                 if match:
+            #                     tracking = match.group()
+            #         break
+            # res[file] = {
+            #     "label": label,
+            #     "tracking": tracking,
+            # }
+            # print(res)
+
+
+check_label()

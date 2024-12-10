@@ -95,7 +95,7 @@ def detect_fedex_barcode(filepath: str):
     try:
         fedex = re.search(r"(\d{12})$", barcode[1].data.decode())
         return fedex.group()
-    except:
+    except:  # noqa: E722
         fedex = re.search(r"(\d{12})$", barcode[0].data.decode())
         return fedex.group()
 
@@ -139,9 +139,11 @@ def main():
                     filepath = download_images(url)
                     # Detech and extract data from barcode
                     # Label USPS => use this
-                    data = detect_usps_barcode(filepath)
+                    try:
+                        data = detect_usps_barcode(filepath)
                     # Label FEDEX => use this
-                    # data = detect_fedex_barcode(filepath)
+                    except Exception:  # noqa: F821
+                        data = detect_fedex_barcode(filepath)
                     value = str(data).replace(" ", "")
                     worksheet.update_value(f"E{i}", value, parse=True)
                 else:

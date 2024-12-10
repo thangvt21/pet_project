@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 import fitz
+
 import pytesseract as tess
 from PIL import Image
 import re
