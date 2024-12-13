@@ -17,7 +17,6 @@ JSON_PATH = (
     "E:\\THANGVT\\vtt_tools\\arrange-PDF-files\\luminous-lodge-321503-2defcccdcd2d.json"
 )
 SHEET_ID = "1zPjUEOQ8iyHGvL_rfjJWRpAo63hTVKjEx_tCUFFax4k"
-MACHINE_LIST = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
 
 
 def split_by_underline(file):
@@ -28,7 +27,9 @@ def split_by_underline(file):
 
 
 class Order:
-    def __init__(self, date, order_code, side, size, color, set_number, set_order, seller):
+    def __init__(
+        self, date, order_code, side, size, color, set_number, set_order, seller
+    ):
         self.date = date
         self.order_code = order_code
         self.side = side
@@ -94,7 +95,7 @@ def main():
     name_sheet = FOLDER_NAME + " PART " + str(set_part)
     gc = pygsheets.authorize(service_account_file=JSON_PATH)
     spreadsheet = gc.open_by_key(SHEET_ID)
-    for m in MACHINE_LIST:
+    for m in range(1, 43):
         machine_path = os.path.join(
             DROPBOX_PATH, "Machine " + str(m), FOLDER_DIR, FOLDER_NAME
         )

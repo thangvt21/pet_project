@@ -2,6 +2,10 @@ import datetime
 import os
 import shutil
 
+# from fastapi import FastAPI
+
+# app = FastAPI()
+
 today = datetime.datetime.now()
 
 DROPBOX_PATH = r"D:\FlashPOD Dropbox"
@@ -13,6 +17,8 @@ FOLDER_DIR = str(today.year) + "_" + str(today.month)
 FOLDER_NAME = "2024_12_7"
 # ----------------------------------------------------------------
 
+
+# app.get("/move_folder/{folder_name}")
 for machine in range(1, 43):  # Machine 1 to 42
     # print(machine)
     machine_name = "Machine " + str(machine)
