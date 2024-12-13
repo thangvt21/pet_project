@@ -1,5 +1,5 @@
 My pet projects with Python:
 Used packages: pandas, os, Path, ... 
 
-Nhập id sheet, nhập sheet name, share quyền edit cho email: count-shirts@luminous-lodge-321503.iam.gserviceaccount.com
-Thêm 3 file csv : list, des, folder để move file đến folder mới
+Add id sheet, sheet name, share permission(edit) for email: count-shirts@luminous-lodge-321503.iam.gserviceaccount.com
+Add 3 .csv files : list, des, folder. Tool move file to new destinations
