@@ -48,7 +48,7 @@ for f in flat_list_folders:
         for file in files:
             full_path = Path(dirpaths) / file
             filename = full_path.name
-            folder = full_path.parts[5]
+            folder = full_path.parts[6]
             # machine = full_path.parts[3]
             for order_code in flat_list_codes:
                 if order_code in filename:
