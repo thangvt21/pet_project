@@ -39,18 +39,18 @@ if __name__ == "__main__":
     # max_height = int(input("Height: "))  # 592 #82 #278
 
     size1 = threading.Thread(
-        target=convert_and_resize_images, args=(input_folder, output_folder, 82, 82)
+        target=convert_and_resize_images, args=(input_folder, output_folder, 200, 200)
     )
     size2 = threading.Thread(
-        target=convert_and_resize_images, args=(input_folder, output_folder, 592, 592)
+        target=convert_and_resize_images, args=(input_folder, output_folder, 800, 800)
     )
-    size3 = threading.Thread(
-        target=convert_and_resize_images, args=(input_folder, output_folder, 278, 278)
-    )
+    # size3 = threading.Thread(
+    #     target=convert_and_resize_images, args=(input_folder, output_folder, 278, 278)
+    # )
     size1.start()
     size2.start()
-    size3.start()
+    # size3.start()
     size1.join()
     size2.join()
-    size3.join()
-    print("Image conversion, resizing, and directory structure replication complete!")
+    # size3.join()
+    print("Xong")
