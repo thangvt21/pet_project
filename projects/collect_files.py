@@ -83,10 +83,10 @@ if len(src_list) != len(des_list):
     raise ValueError("Source and destination lists must have the same length.")
 c = 0
 for src, des in zip(src_list, des_list):
-    # print(src, des)
-    try:
-        shutil.move(src, des)
-    except Exception as e:
-        print("Error", e)
+    print(src, des)
+    # try:
+    #     shutil.move(src, des)
+    # except Exception as e:
+    #     print("Error", e)
     c += 1
 print(c)
