@@ -5,66 +5,85 @@ import csv
 from pathlib import Path
 
 today = datetime.datetime.now()
-folder_created = "before15"
+folder_created = "before17_estimate21_line6"
 backup_path = r"D:\FlashPOD Dropbox\BackupFlashPOD"
+csv_folder = r"D:\work\pet_project\img\folder.csv"
+csv_ordercode = r"D:\work\pet_project\img\order_code.csv"
 
-# Import CSV files of order_code, folder_name, folder_type
-# Folder_names
-with open(r"D:\work\pet_project\img\folder.csv", "r") as file:
-    data = csv.reader(file)
-    data_folder = []
-    for row in data:
-        data_folder.append(row)
-list_folders = [item[0] for item in data_folder]
 
-# Order_codes
-with open(r"D:\work\pet_project\img\list.csv", "r") as file:
-    data2 = csv.reader(file)
-    data_code = []
-    for row in data2:
-        data_code.append(row)
-list_codes = [item[0] for item in data_code]
+def importCSV(path):
+    temp = []
+    with open(path, "r") as file:
+        file_csv = csv.reader(file)
+        for row in file_csv:
+            temp.append(row)
+    path_list = [item[0] for item in temp]
+    return path_list
 
-# Find filename and move to BackupFlashPOD
-src_list = []
-des_list = []
 
-for f in list_folders:
-    local_path = Path("D:/", f)
-    for dirpaths, dirnames, files in os.walk(local_path):
-        for file in files:
-            full_path = Path(dirpaths) / file
-            filename = full_path.name
-            folder_name = full_path.parts[6]
-            # machine = full_path.parts[3]
-            check = 0
-            for order_code in list_codes:
-                if order_code in filename:
-                    src_path = Path(local_path, filename)
-                    if src_path not in src_list:
-                        src_list.append(src_path)
-                    else:
-                        print("Đường dẫn bị lặp.")
-                    a = folder_name.split("_")
-                    if a[1] in ["24H", "EX", "O9"]:
-                        folder_name = "_".join(a[4:-1])
-                    else:
-                        folder_name = "_".join(a[3:-1])
-                    des_path = Path(backup_path, folder_created, folder_name, filename)
-                    set_des = Path(backup_path, folder_created, folder_name)
-                    set_des.mkdir(parents=True, exist_ok=True)
-                    if des_path not in des_list:
-                        des_list.append(des_path)
-                    else:
-                        print("Đường dẫn bị lặp.")
+def createDestinationFolder(folder_name):
+    set_des = Path(backup_path, folder_created, folder_name)
+    set_des.mkdir(parents=True, exist_ok=True)
 
-if len(src_list) != len(des_list):
-    raise ValueError("Danh sách folder gốc và folder mới không bằng nhau")
-c = 0
-for src, des in zip(src_list, des_list):
-    # try:
-    #     shutil.move(src, des)
-    # except Exception as e:
-    #     print("Error", e)
-    c += 1
-print(c)
+
+def getPathForMoveFile(order_list, folder_list):
+    if len(order_list) != len(folder_list):
+        raise ValueError("Check lại 2 files .csv.")
+    else:
+        print("order_list = folder_list => OK!")
+
+    source_list = []
+    destination_list = []
+
+    for folder in folder_list:
+        local_path = Path("D:/", folder)
+        for dirpaths, _, files in os.walk(local_path):
+            for file in files:
+                full_path = Path(dirpaths) / file
+                filename = full_path.name
+                # fmt: off
+                folder_name = full_path.parts[6] # D:\FlashPOD Dropbox\FlashPOD\Machine 2\2024_12\2024_12_10\<<01_24H_1210_P2_SET_HOODIE_GILDAN_27>>\.pdf
+                # fmt: on
+                for order_code in order_list:
+                    if order_code in filename:
+                        source_path = Path(local_path, filename)
+                        if source_path not in source_list:
+                            source_list.append(source_path)
+                        # fmt: off
+                        a = folder_name.split("_")          # "23","EX","1216","P12","SINGLE","SHIRT","INTHEOMOCKUP","DOILINE","1"
+                        
+                        if a[1] in ["24H", "EX", "O9"]:     # 23_<<EX>>_1216_P12_SINGLE_SHIRT_INTHEOMOCKUP_DOILINE_1
+                            folder_name = "_".join(a[4:-1]) # 23_<<EX>>_1216_P12_<<SINGLE_SHIRT_INTHEOMOCKUP_DOILINE>>_1 
+                        else:
+                            folder_name = "_".join(a[3:-1]) # 23_1216_P12_<<SINGLE_SHIRT_INTHEOMOCKUP_DOILINE>>_1
+                        destination_path = Path(backup_path, folder_created, folder_name, filename)
+                        # fmt: on
+                        if destination_path not in destination_list:
+                            destination_list.append(destination_path)
+
+                        createDestinationFolder(folder_name)
+    return (source_list, destination_list)
+
+
+def moveFile(source_list, destination_list):
+    if len(source_list) != len(destination_list):
+        raise ValueError("Danh sách folder gốc và folder mới không bằng nhau")
+    else:
+        print("Source list = Destination list => OK")
+    print("Bắt đầu move files...")
+    for source, destination in zip(source_list, destination_list):
+        try:
+            shutil.move(source, destination)
+        except Exception as e:
+            print("Error", e)
+
+
+def main():
+    folder_list = importCSV(csv_folder)
+    order_list = importCSV(csv_ordercode)
+    source_list, destination_list = getPathForMoveFile(order_list, folder_list)
+    print(source_list, destination_list)
+    # moveFile(source_list, destination_list)
+
+
+main()
