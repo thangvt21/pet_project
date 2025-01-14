@@ -40,36 +40,4 @@ def check_label():
                 text += tess.image_to_string(Image.open(file_path)) + "\n"
             print(text)
 
-            # for p in provider:
-            #     match2 = re.search(p, text)
-
-            #     if match2:
-            #         match = re.search(pattern_ups, text)
-            #         print(p)
-            #         if match:
-            #             print(match.group())
-
-            # label = ""
-            # tracking = ""
-            # for pr in provider:
-            #     if re.search(pr, text):
-            #         label = pr
-            #         if label == "FedEx":
-            #             for pa in pattern_fedex:
-            #                 match = re.search(pa, text)
-            #                 if match:
-            #                     tracking = match.group(1)
-            #         else:
-            #             for pa in pattern_usps:
-            #                 match = re.search(pa, text)
-            #                 if match:
-            #                     tracking = match.group()
-            #         break
-            # res[file] = {
-            #     "label": label,
-            #     "tracking": tracking,
-            # }
-            # print(res)
-
-
 check_label()

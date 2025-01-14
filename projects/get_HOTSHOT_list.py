@@ -1,9 +1,10 @@
 import os
 import pygsheets
 import pandas as pd
+import openpyxl
 
-root = r"D:\FlashPOD Dropbox\FlashPOD\REPRINT\2024_11\2024_11_16\21_REPRINT_1116_DUA CHO MOCKUP"
-excel_file_name = "21_REPRINT_1116_DUA CHO MOCKUP"
+root = r"D:\FlashPOD Dropbox\FlashPOD\Machine 2\2025_1\2025_1_7\01_24H_0107_P2_SET_HOODIE_GILDAN_8"
+excel_file_name = "test"
 folder_path = "D:\\work\\pet_project\\img\\"
 
 
@@ -30,27 +31,27 @@ class Order:
         product_type,
         provider,
     ):
-        self.date = date
+        self.color = color
+        self.size = size
         self.order_code = order_code
         self.side1 = side1
-        self.size = size
-        self.color = color
         self.set_number = set_number
         self.set = set_order
         self.side2 = side2
         self.seller = seller
         self.product_type = product_type
         self.provider = provider
+        self.date = date
 
 
 def create_order_single(file):
     split = split_by_underline(file)
     order = Order(
         split[0],
+        split[1],
+        split[2],
         split[3],
         split[4],
-        split[2],
-        split[1],
         split[5],
         split[6],
         split[7],
@@ -64,11 +65,11 @@ def create_order_single(file):
 def create_order_set(file):
     split = split_by_underline(file)
     order = Order(
-        split[0],
-        split[1],
-        split[4],
         split[2],
+        split[1],
+        split[0],
         split[3],
+        split[4],
         split[5],
         split[6],
         split[7],
@@ -116,13 +117,16 @@ def get_pdf_list(path):
         for file in files:
             if file.endswith(".pdf"):
                 split = split_by_underline(file)
-                if split[6] != "1":
-                    order = create_order_set(file)
-                    file_name = get_file_name(order)
+                if split[3] != "1":
+                    # order = create_order_set(file)
+                    # file_name = get_file_name(order)
+                    file_name = split[0]
                     lst_set.append(file_name)
                 else:
-                    order = create_order_single(file)
-                    file_name = get_file_name(order)
+                    # order = create_order_single(file)
+                    # file_name = get_file_name(order)
+                    # lst_single.append(file_name)
+                    file_name = split[2]
                     lst_single.append(file_name)
     return lst_single, lst_set
 

@@ -5,7 +5,7 @@ import csv
 from pathlib import Path
 
 today = datetime.datetime.now()
-folder_created = "before17_estimate21_line6"
+folder_created = "before21_line6"
 backup_path = r"D:\FlashPOD Dropbox\BackupFlashPOD"
 csv_folder = r"D:\work\pet_project\img\folder.csv"
 csv_ordercode = r"D:\work\pet_project\img\order_code.csv"
@@ -62,7 +62,7 @@ def getPathForMoveFile(order_list, folder_list):
                             destination_list.append(destination_path)
 
                         createDestinationFolder(folder_name)
-    return (source_list, destination_list)
+    return source_list, destination_list
 
 
 def moveFile(source_list, destination_list):
@@ -82,8 +82,8 @@ def main():
     folder_list = importCSV(csv_folder)
     order_list = importCSV(csv_ordercode)
     source_list, destination_list = getPathForMoveFile(order_list, folder_list)
-    print(source_list, destination_list)
-    # moveFile(source_list, destination_list)
+    # print(len(source_list), len(destination_list))
+    moveFile(source_list, destination_list)
 
 
 main()
