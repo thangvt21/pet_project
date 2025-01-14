@@ -1,8 +1,8 @@
 from PIL import Image
 
 # Open the PNG file
-input_image = r"D:\work\pet_project\img\download (1).png"
-output_image = r"D:\work\pet_project\img\2.webp"
+input_image = r"D:\work\pet_project\img\Gianggeigei.jpg"
+output_image = r"D:\work\pet_project\img\Gianggeigei.webp"
 
 image = Image.open(input_image)
 # Save as WebP with lossless option

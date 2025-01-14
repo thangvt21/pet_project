@@ -10,7 +10,7 @@ FLASHPOD_PATH = DROPBOX_PATH + r"\FlashPOD"
 FOLDER_DIR = str(today.year) + "_" + str(today.month)
 
 # ---------------Nhập tên folder muốn chuyển----------------------
-FOLDER_NAME = "2024_12_11"
+FOLDER_NAME = "2024_12_12"
 # ----------------------------------------------------------------
 
 
@@ -20,7 +20,8 @@ for machine in range(1, 43):  # Machine 1 to 42
     src_path = os.path.join(FLASHPOD_PATH, machine_name, FOLDER_DIR)
     des_path = os.path.join(BACKUP_PATH, machine_name)
     try:
-        shutil.move(os.path.join(src_path, FOLDER_NAME), des_path)
+        print(os.path.join(src_path, FOLDER_NAME))
+        # shutil.move(os.path.join(src_path, FOLDER_NAME), des_path)
         # shutil.rmtree(os.path.join(src_path, FOLDER_NAME))
     except Exception as e:
         print(e)

@@ -31,8 +31,8 @@ def main():
             print("DATE\t   :", folder_name)
             for m in range(1, 43):
                 count = 0
-                # path = get_path(m)
-                path = "D:\\FlashPOD Dropbox\\FlashPOD\\HOTSHOT\\2024_8\\"
+                path = get_path(m)
+                # path = "D:\\FlashPOD Dropbox\\FlashPOD\\"
                 for _, _, files in os.walk(path):
                     for file in files:
                         if file.endswith(".pdf"):

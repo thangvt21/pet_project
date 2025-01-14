@@ -25,6 +25,8 @@ def split_by_underline(file):
 
 def get_order_code_and_seller(path):
     list_data = []
+    list_order = []
+    list_seller = []
     for _, _, files in os.walk(path):
         for file in files:
             if file.endswith(".pdf"):
@@ -33,16 +35,20 @@ def get_order_code_and_seller(path):
                     if split[4] != "1":
                         order_code = split[0]
                         seller = split[7]
-                        data = "-".join([order_code, seller])
-                        if data not in list_data:
-                            list_data.append(data)
+                        # data = "-".join([order_code, seller])
+                        if order_code not in list_data:
+                            list_order.append(order_code)
+                        if seller not in list_data:
+                            list_seller.append(seller)
                     else:
                         order_code = split[2]
                         seller = split[7]
-                        data = " - ".join([order_code, seller])
-                        if data not in list_data:
-                            list_data.append(data)
-    return list_data
+                        # data = " - ".join([order_code, seller])
+                        if order_code not in list_data:
+                            list_order.append(order_code)
+                        if seller not in list_data:
+                            list_seller.append(seller)
+    return list_order, list_seller
 
 
 def main():
@@ -55,8 +61,10 @@ def main():
         machine_path = os.path.join(
             DROPBOX_PATH, "Machine " + str(m), FOLDER_DIR, FOLDER_NAME
         )
-        df = get_order_code_and_seller(machine_path)
-        data1 = pd.DataFrame(df, columns=["Order Code"])
+        df, df_seller = get_order_code_and_seller(machine_path)
+        data1 = pd.DataFrame(df)
+        data2 = pd.DataFrame(df_seller)
         worksheet.set_dataframe(data1, start=(1,1+i), copy_head=False)
-        i += 1
+        worksheet.set_dataframe(data2, start=(1,2+i), copy_head=False)
+        i += 2
 main()

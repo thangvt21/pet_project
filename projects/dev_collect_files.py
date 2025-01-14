@@ -62,7 +62,7 @@ def getPathForMoveFile(order_list, folder_list):
                             destination_list.append(destination_path)
 
                         createDestinationFolder(folder_name)
-    return (source_list, destination_list)
+    return source_list, destination_list
 
 
 def moveFile(source_list, destination_list):
