@@ -8,3 +8,7 @@
 /.vscode
 /.pytest_cache
 /.idea
+/projects/PDF
+/projects/build
+/projects/dist
+/projects/.venv
