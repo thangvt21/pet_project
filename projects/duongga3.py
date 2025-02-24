@@ -3,9 +3,7 @@ from reportlab.pdfgen import canvas
 from io import BytesIO
 from pathlib import Path
 
-file_name = (
-    "BLACK_S_D3O5SCFXY_F_1-1_front_HIEU110701@GMAIL.COM_HOODIE_GILDAN_01062025" + ".pdf"
-)
+file_name = "BLACK_2XL_SCJISX9JD_B_1-1_left_MATRIXTEAM_SHIRT_GILDAN_01132025" + ".pdf"
 old = r"E:\work\pet_project\img"
 new = r"E:\work\pet_project\jpeg"
 
