@@ -13,8 +13,8 @@ import pyzbar.wrapper
 
 BASE_DIR = Path(__file__).resolve().parent
 
-SHEET_ID = "1lX8xs3zJVinhRs_r4itv6V8gAw4Aut8rY_waj3LHql4"
-JSON_PATH = BASE_DIR.parent / "luminous-lodge-321503-c17157d58b87.json"
+SHEET_ID = "1zgKP0_-EWUHNWdpPxBcI1roZqmwp9bfXjAiZVNtoDpk"
+JSON_PATH = BASE_DIR.parent / "luminous-lodge-321503-1909d6be26b7.json"
 IMAGE_PATH = BASE_DIR.parent / "img"
 
 
