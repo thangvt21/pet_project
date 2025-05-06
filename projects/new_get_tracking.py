@@ -75,7 +75,7 @@ def detect_usps_barcode(filepath: str):
     else:
         images = cv2.imread(filepath)
         gray = cv2.cvtColor(images, cv2.COLOR_BGR2GRAY)
-    barcode = pyzbar.decode(gray, symbols=[pyzbar.ZBarSymbol.CODE128])
+    barcode = pyzbar.pyzbar.decode(gray, symbols=[pyzbar.pyzbar.ZBarSymbol.CODE128])
     data_barcode = barcode[0].data
     usps = re.search(r"(?<=\x1d)\d+", data_barcode.decode())
     return usps.group()
